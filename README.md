@@ -1,2 +1,2 @@
-# model-project-template
-Template for the modelling project.
+# CISC 204 Modelling Project
+More information coming soon...
