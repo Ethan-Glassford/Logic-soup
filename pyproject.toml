@@ -1,3 +1,14 @@
 
+[tool]
+
+[tool.poetry]
+authors = ["Christian Muise <christian.muise@queensu.ca>"]
+description = "Just a test project for CISC 204."
+license = "MIT"
+name = "test_project"
+readme = "README.md"
+version = "1.0"
+
 [tool.poetry.dependencies]
 nnf = "^0.2.1"
+python = "^3.8"
