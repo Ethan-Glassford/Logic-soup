@@ -5,8 +5,8 @@ def theory():
     # Define Variables
     A, B, C = map(Var, 'abc')
 
-    # TODO: Create a theory that matches (A ∨ B) ∧ (¬A ∨ C)
+    # TODO: Create and return a theory that matches (A or B) and ((not A) or C)
     pass
 
 if __name__ == "__main__":
-    print("Theory: " % str(theory()))
+    print("Theory: %s" % str(theory()))
