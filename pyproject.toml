@@ -3,9 +3,9 @@
 
 [tool.poetry]
 authors = ["Christian Muise <christian.muise@queensu.ca>"]
-description = "Just a test project for CISC 204."
+description = "Template for the major project in CISC 204."
 license = "MIT"
-name = "test_project"
+name = "model_project"
 readme = "README.md"
 version = "1.0"
 
