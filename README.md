@@ -1,4 +1,4 @@
 
-# CISC 204 Modelling Project
+# CISC/CMPE 204 Modelling Project
 
 More information coming soon...
