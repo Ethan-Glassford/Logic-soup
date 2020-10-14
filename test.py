@@ -1,13 +1,17 @@
 
-import os
+import os, sys
 
 from run import example_theory
+
+USAGE = '\n\tpython3 test.py [draft|final]\n'
+EXPECTED_VAR_MIN = 10
+EXPECTED_CONS_MIN = 50
 
 def test_theory():
     T = example_theory()
 
-    assert len(T.vars()) > 10, "Only %d variables -- your theory is likely not sophisticated enough for the course project." % len(T.vars())
-    assert T.size() > 50, "Only %d in the formula -- your theory is likely not sophisticated enough for the course project." % T.size()
+    assert len(T.vars()) > EXPECTED_VAR_MIN, "Only %d variables -- your theory is likely not sophisticated enough for the course project." % len(T.vars())
+    assert T.size() > EXPECTED_CONS_MIN, "Only %d operators in the formula -- your theory is likely not sophisticated enough for the course project." % T.size()
     assert not T.valid(), "Theory is valid (every assignment is a solution). Something is likely wrong with the constraints."
     assert not T.negate().valid(), "Theory is inconsistent (no solutions exist). Something is likely wrong with the constraints."
 
@@ -27,3 +31,10 @@ def test_draft_files():
 
 def test_final_files():
     file_checks('final')
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2 or sys.argv[1] not in ['draft', 'final']:
+        print(USAGE)
+        exit(1)
+    test_theory()
+    file_checks(sys.argv[1])
