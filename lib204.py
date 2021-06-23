@@ -41,7 +41,7 @@ class Encoding(object):
             T = And(self.constraints + lits)
         else:
             T = And(self.constraints)
-        return dsharp.compile(T.to_CNF(), executable='bin/dsharp').model_count()
+        return dsharp.compile(T.to_CNF(), executable='bin/dsharp', smooth=True).model_count()
 
     def likelihood(self, lit):
         return self.count_solutions([lit]) / self.count_solutions()
