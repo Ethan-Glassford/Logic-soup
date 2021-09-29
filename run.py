@@ -1,6 +1,6 @@
-
 from nnf import Var
 from bauhaus import Encoding, proposition, constraint
+from bauhaus.utils import count_solutions, likelihood
 
 # Encoding that will store all of your constraints
 E = Encoding()
@@ -54,8 +54,7 @@ def example_theory():
     # Implication
     E.add_constraint(y >> z)
     # Negate a formula
-    #E.add_constraint((x & y).negate())
-    E.pprint(E.negate())
+    E.add_constraint((x & y).negate())
     # You can also add more customized "fancy" constraints. Use case: you don't want to enforce "exactly one"
     # for every instance of BasicPropositions, but you want to enforce it for a, b, and c.:
     constraint.add_exactly_one(E, a, b, c)
@@ -66,12 +65,17 @@ def example_theory():
 if __name__ == "__main__":
 
     T = example_theory()
-
-    print("\nSatisfiable: %s" % T.is_satisfiable())
-    print("# Solutions: %d" % T.count_solutions())
+    # Don't compile until you're finished adding all your constraints!
+    T = T.compile()
+    # After compilation (and only after), you can check some of the properties
+    # of your model:
+    print("\nSatisfiable: %s" % T.satisfiable())
+    print("# Solutions: %d" % count_solutions(T))
     print("   Solution: %s" % T.solve())
 
     print("\nVariable likelihoods:")
     for v,vn in zip([a,b,c,x,y,z], 'abcxyz'):
-        print(" %s: %.2f" % (vn, T.likelihood(v)))
+        # Ensure that you only send these functions NNF formulas
+        # Literals are compiled to NNF here
+        print(" %s: %.2f" % (vn, likelihood(T, v.compile())))
     print()
