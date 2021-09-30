@@ -1,4 +1,3 @@
-
 # CISC/CMPE 204 Modelling Project
 
 Welcome to the major project for CISC/CMPE 204 (Fall 2021)!
