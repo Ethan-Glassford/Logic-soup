@@ -6,7 +6,7 @@ While a grade will not be assigned, failing to submit this draft may result in p
 
 ## Due Date
 
-November 2nd, 2020
+October 29, 2021
 
 ## Expected Items
 
