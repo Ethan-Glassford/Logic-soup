@@ -1,4 +1,4 @@
-from nnf import Var
+
 from bauhaus import Encoding, proposition, constraint
 from bauhaus.utils import count_solutions, likelihood
 
@@ -77,5 +77,5 @@ if __name__ == "__main__":
     for v,vn in zip([a,b,c,x,y,z], 'abcxyz'):
         # Ensure that you only send these functions NNF formulas
         # Literals are compiled to NNF here
-        print(" %s: %.2f" % (vn, likelihood(T, v.compile())))
+        print(" %s: %.2f" % (vn, likelihood(T, v)))
     print()
