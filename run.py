@@ -5,6 +5,30 @@ from bauhaus.utils import count_solutions, likelihood
 # Encoding that will store all of your constraints
 E = Encoding()
 
+TETRIMINOS = ['I','O','J','L','S','Z','T']
+ORIENTATION = [1,2,3,4]
+COLOUMNS = [1,2,3,4,5,6]
+ROWS = [1,2,3,4,5,6,7,8,9]
+
+PROPOSITIONS = []
+#Proposition for a T tetris piece to have orientation
+@proposition(E)
+class tetrispiece:
+    def __init__(self,type, location, time, orientation):
+        self.type = type
+        self.orientation = orientation
+        self.time = time
+        self.location = location
+    def __repr__(self) -> str:
+        return f"{self.type}@{self.location}@{self.time}@{self.orientation}"
+
+for type in TETRIMINOS:
+    for location in COLOUMNS:
+        for time in ROWS:
+            for orientation in ORIENTATION:
+                PROPOSITIONS.append(tetrispiece(type, location, time, orientation))  
+
+
 # To create propositions, create classes for them first, annotated with "@proposition" and the Encoding
 @proposition(E)
 class BasicPropositions:
