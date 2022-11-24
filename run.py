@@ -1,35 +1,47 @@
-
 from bauhaus import Encoding, proposition, constraint
 from bauhaus.utils import count_solutions, likelihood
+import random
 
 # Encoding that will store all of your constraints
 E = Encoding()
 
-TETRIMINOS = ['I','O','J','L','S','Z','T']
-ORIENTATION = [1,2,3,4]
-COLOUMNS = [1,2,3,4,5,6]
-ROWS = [1,2,3,4,5,6,7,8,9]
 
+TETRIMINOS = [('I', 2), ('O', 1), ('J', 4), ('L', 4),
+              ('S', 2), ('Z', 2), ('T', 4)]
+COLUMNS = 6
+ROWS = 9
+ROUNDS = 22
+PIECES_BY_ROUND = [random.choice(TETRIMINOS)[0] for _ in range(ROUNDS)]
 PROPOSITIONS = []
-#Proposition for a T tetris piece to have orientation
+
+
 @proposition(E)
+class TetrisPiece:
+    def __init__(self, type, location, time, orientation, roundNumber):
+        self.type = type
+        self.orientation = orientation
+        self.time = time
+        self.location = location
+        self.roundNumber = roundNumber
 
-class pieceorientation:
-    def __init__(self,config): 
-        self.config = config
-        
     def __repr__(self) -> str:
-        return f"({self.config})"
+        return f"{self.type}@{self.location}@{self.time}@{self.orientation}"
 
 
-    
+for type, orientations in TETRIMINOS:
+    for orientation in range(orientations):
+        for column in range(COLUMNS):
+            for row in range(ROWS):
+                for roundNumber in range(ROUNDS):
+                    PROPOSITIONS.append(TetrisPiece(
+                        type, column, row, orientation, roundNumber))
 
 
 # To create propositions, create classes for them first, annotated with "@proposition" and the Encoding
 @proposition(E)
 class BasicPropositions:
 
-    def __init__(self, data): 
+    def __init__(self, data):
         self.data = data
 
     def __repr__(self):
@@ -51,9 +63,10 @@ class FancyPropositions:
     def __repr__(self):
         return f"A.{self.data}"
 
+
 # Call your variables whatever you want
 a = BasicPropositions("a")
-b = BasicPropositions("b")   
+b = BasicPropositions("b")
 c = BasicPropositions("c")
 d = BasicPropositions("d")
 e = BasicPropositions("e")
@@ -69,7 +82,7 @@ z = FancyPropositions("z")
 #  This restriction is fairly minimal, and if there is any concern, reach out to the teaching staff to clarify
 #  what the expectations are.
 def example_theory():
-    # Add custom constraints by creating formulas with the variables you created. 
+    # Add custom constraints by creating formulas with the variables you created.
     E.add_constraint((a | b) & ~x)
     # Implication
     E.add_constraint(y >> z)
@@ -94,7 +107,7 @@ if __name__ == "__main__":
     print("   Solution: %s" % T.solve())
 
     print("\nVariable likelihoods:")
-    for v,vn in zip([a,b,c,x,y,z], 'abcxyz'):
+    for v, vn in zip([a, b, c, x, y, z], 'abcxyz'):
         # Ensure that you only send these functions NNF formulas
         # Literals are compiled to NNF here
         print(" %s: %.2f" % (vn, likelihood(T, v)))
