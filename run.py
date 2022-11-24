@@ -14,9 +14,11 @@ ROUNDS = 22
 PIECES_BY_ROUND = [random.choice(TETRIMINOS)[0] for _ in range(ROUNDS)]
 PROPOSITIONS = []
 
-
+#Represent a placed tetris piece which is denoted by the properties of the piece and the roundnumber
+#Note for Constraints: There will ONLY be one round of each number and this is used to differentiate pieces
+#Will be used for detecting whether a piece has been illegally placed under an already placed piece.
 @proposition(E)
-class TetrisPiece:
+class TetrisPiece: 
     def __init__(self, type, location, time, orientation, roundNumber):
         self.type = type
         self.orientation = orientation
@@ -25,16 +27,17 @@ class TetrisPiece:
         self.roundNumber = roundNumber
 
     def __repr__(self) -> str:
-        return f"{self.type}@{self.location}@{self.time}@{self.orientation}"
+        return f"{self.type}@{self.location}@{self.time}@{self.orientation}@{self.roundNumber}"
 
 
-for type, orientations in TETRIMINOS:
-    for orientation in range(orientations):
-        for column in range(COLUMNS):
-            for row in range(ROWS):
-                for roundNumber in range(ROUNDS):
+#
+for type, orientations in TETRIMINOS:#For each piece type
+    for orientation in range(orientations): #For each erientation for that type
+        for column in range(COLUMNS): #for every coloumn it can be in
+            for row in range(ROWS): #For every row/time in can be in
+                for roundNumber in range(ROUNDS): #For each round it can be in)
                     PROPOSITIONS.append(TetrisPiece(
-                        type, column, row, orientation, roundNumber))
+                        type, column, row, orientation, roundNumber)) #Create a proposition
 
 
 # To create propositions, create classes for them first, annotated with "@proposition" and the Encoding
