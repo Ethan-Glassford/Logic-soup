@@ -1,117 +1,141 @@
 from bauhaus import Encoding, proposition, constraint
 from bauhaus.utils import count_solutions, likelihood
+import collections
 import random
 
 # Encoding that will store all of your constraints
 E = Encoding()
 
 
-TETRIMINOS = [('I', 2), ('O', 1), ('J', 4), ('L', 4),
-              ('S', 2), ('Z', 2), ('T', 4)]
-COLUMNS = 6
-ROWS = 9
-ROUNDS = 22
-PIECES_BY_ROUND = [random.choice(TETRIMINOS)[0] for _ in range(ROUNDS)]
-PROPOSITIONS = []
+TETRIMINOS = {
+    'I': (
+        ((0, 0), (0, 1), (0, 2), (0, 3)),
+        ((0, 0), (1, 0), (2, 0), (3, 0))
+    ),
+    'O': (
+        ((0, 0), (0, 1), (1, 0), (1, 1)),
+    ),
+    'J': (
+        ((0, 0), (0, 1), (0, 2), (1, 2)),
+        ((0, 1), (1, 1), (2, 0), (2, 1)),
+        ((0, 0), (1, 0), (1, 1), (1, 2)),
+        ((0, 0), (0, 1), (1, 0), (2, 0))
+    ),
+    'L': (
+        ((0, 0), (0, 1), (0, 2), (1, 0)),
+        ((0, 0), (0, 1), (1, 1), (2, 1)),
+        ((0, 2), (1, 0), (1, 1), (1, 2)),
+        ((0, 1), (1, 1), (2, 1), (2, 2))
+    ),
+    'S': (
+        ((0, 1), (0, 2), (1, 0), (1, 1)),
+        ((0, 0), (1, 0), (1, 1), (2, 1))
+    ),
+    'Z': (
+        ((0, 0), (0, 1), (1, 1), (1, 2)),
+        ((0, 1), (1, 0), (1, 1), (2, 0))
+    ),
+    'T': (
+        ((0, 0), (0, 1), (0, 2), (1, 1)),
+        ((0, 1), (1, 0), (1, 1), (2, 1)),
+        ((0, 1), (1, 0), (1, 1), (1, 2)),
+        ((0, 0), (1, 0), (1, 1), (2, 0))
+    )
+}
 
-#Represent a placed tetris piece which is denoted by the properties of the piece and the roundnumber
-#Note for Constraints: There will ONLY be one round of each number and this is used to differentiate pieces
-#Will be used for detecting whether a piece has been illegally placed under an already placed piece.
+
+COLUMNS = 2
+ROWS = 3
+PIECE_SIZE = 4
+ROUNDS = 1
+
+PIECES = ('I', 'O', 'J', 'L', 'S', 'Z', 'T')
+PIECES_BY_ROUND = [random.choice(PIECES) for _ in range(ROUNDS)]
+print(f'Piece Order: {PIECES_BY_ROUND}')
+
+
 @proposition(E)
-class TetrisPiece: 
-    def __init__(self, type, location, time, orientation, roundNumber):
-        self.type = type
-        self.orientation = orientation
+class TetrisPiece:
+    def __init__(self, piece, rotation, x, y, time):
+        self.piece = piece
+        self.rotation = rotation
+        self.x = x
+        self.y = y
         self.time = time
-        self.location = location
-        self.roundNumber = roundNumber
-
-    def __repr__(self) -> str:
-        return f"{self.type}@{self.location}@{self.time}@{self.orientation}@{self.roundNumber}"
-
-
-#
-for type, orientations in TETRIMINOS:#For each piece type
-    for orientation in range(orientations): #For each erientation for that type
-        for column in range(COLUMNS): #for every coloumn it can be in
-            for row in range(ROWS): #For every row/time in can be in
-                for roundNumber in range(ROUNDS): #For each round it can be in)
-                    PROPOSITIONS.append(TetrisPiece(
-                        type, column, row, orientation, roundNumber)) #Create a proposition
-
-
-# To create propositions, create classes for them first, annotated with "@proposition" and the Encoding
-@proposition(E)
-class BasicPropositions:
-
-    def __init__(self, data):
-        self.data = data
 
     def __repr__(self):
-        return f"A.{self.data}"
+        return f'{self.piece}_{self.rotation} {self.x, self.y} R{self.time}'
 
 
-# Different classes for propositions are useful because this allows for more dynamic constraint creation
-# for propositions within that class. For example, you can enforce that "at least one" of the propositions
-# that are instances of this class must be true by using a @constraint decorator.
-# other options include: at most one, exactly one, at most k, and implies all.
-# For a complete module reference, see https://bauhaus.readthedocs.io/en/latest/bauhaus.html
-@constraint.at_least_one(E)
 @proposition(E)
-class FancyPropositions:
-
-    def __init__(self, data):
-        self.data = data
+class Cell:
+    def __init__(self, x, y, time):
+        self.x = x
+        self.y = y
+        self.time = time
 
     def __repr__(self):
-        return f"A.{self.data}"
+        return f'{self.x, self.y} R{self.time}'
 
 
-# Call your variables whatever you want
-a = BasicPropositions("a")
-b = BasicPropositions("b")
-c = BasicPropositions("c")
-d = BasicPropositions("d")
-e = BasicPropositions("e")
-# At least one of these will be true
-x = FancyPropositions("x")
-y = FancyPropositions("y")
-z = FancyPropositions("z")
+cells_by_cell = collections.defaultdict(list)
+cells_by_time = collections.defaultdict(list)
+all_cell_props = []
+for x in range(ROWS + PIECE_SIZE - 1):
+    for y in range(COLUMNS + PIECE_SIZE - 1):
+        for time in range(ROUNDS):
+            cell_prop = Cell(x, y, time)
+            cells_by_cell[(x, y)].append(cell_prop)
+            cells_by_time[time].append(cell_prop)
+            all_cell_props.append(cell_prop)
 
+pieces_by_time = collections.defaultdict(list)
+pieces_by_cell = collections.defaultdict(list)
+all_piece_props = []
+for x in range(ROWS):
+    for y in range(COLUMNS):
+        for time, piece in enumerate(PIECES_BY_ROUND):
+            for i in range(len(TETRIMINOS[piece])):
+                piece_prop = TetrisPiece(piece, i, x, y, time)
+                pieces_by_time[time].append(piece_prop)
+                pieces_by_cell[(x, y)].append(piece_prop)
+                all_piece_props.append(piece_prop)
 
-# Build an example full theory for your setting and return it.
-#
-#  There should be at least 10 variables, and a sufficiently large formula to describe it (>50 operators).
-#  This restriction is fairly minimal, and if there is any concern, reach out to the teaching staff to clarify
-#  what the expectations are.
-def example_theory():
-    # Add custom constraints by creating formulas with the variables you created.
-    E.add_constraint((a | b) & ~x)
-    # Implication
-    E.add_constraint(y >> z)
-    # Negate a formula
-    E.add_constraint(~(x & y))
-    # You can also add more customized "fancy" constraints. Use case: you don't want to enforce "exactly one"
-    # for every instance of BasicPropositions, but you want to enforce it for a, b, and c.:
-    constraint.add_exactly_one(E, a, b, c)
+for piece_props in pieces_by_time.values():
+    constraint.add_exactly_one(E, *piece_props)
 
-    return E
+for piece_prop in all_piece_props:
+    rotation = TETRIMINOS[piece_prop.piece][piece_prop.rotation]
+    cells = ((piece_prop.x + dx, piece_prop.y + dy) for dx, dy in rotation)
+    if all(x != ROWS - 1 for x, _ in cells):
+        if piece_prop.time:
+            constraint.add_at_least_one(
+                E, *(cells_by_cell[(x + 1, y)][time - 1] for x, y in cells))
+        else:
+            E.add_constraint(~piece_prop)
 
+    for x, y in cells:
+        for time in range(piece_prop.time):
+            for r in range(x + 1):
+                E.add_constraint(piece_prop >> (~cells_by_cell[(r, y)][time]))
+        for time in range(piece_prop.time, ROUNDS):
+            E.add_constraint(piece_prop >> cells_by_cell[(x, y)][time])
 
-if __name__ == "__main__":
+for (x, y), cell_props in cells_by_cell.items():
+    if x < 0 or x >= ROWS or y < 0 or y >= COLUMNS:
+        constraint.add_none_of(E, *cell_props)
 
-    T = example_theory()
-    # Don't compile until you're finished adding all your constraints!
-    T = T.compile()
-    # After compilation (and only after), you can check some of the properties
-    # of your model:
-    print("\nSatisfiable: %s" % T.satisfiable())
-    print("# Solutions: %d" % count_solutions(T))
-    print("   Solution: %s" % T.solve())
+for time, cell_props in cells_by_time.items():
+    if (time + 1) * PIECE_SIZE < ROWS * COLUMNS:
+        constraint.add_at_most_k(E, (time + 1) * PIECE_SIZE, *cell_props)
+    else:
+        break
 
-    print("\nVariable likelihoods:")
-    for v, vn in zip([a, b, c, x, y, z], 'abcxyz'):
-        # Ensure that you only send these functions NNF formulas
-        # Literals are compiled to NNF here
-        print(" %s: %.2f" % (vn, likelihood(T, v)))
-    print()
+# Don't compile until you're finished adding all your constraints!
+E = E.compile()
+# After compilation (and only after), you can check some of the properties
+# of your model:
+print(f'\nSatisfiable: {E.satisfiable()}')
+# print(f'# Solutions: {count_solutions(T)}')
+print(f'Solution: {E.solve()}')
+print("Variable likelihoods:")
