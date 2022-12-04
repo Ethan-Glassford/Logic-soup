@@ -44,8 +44,10 @@ TETRIMINOS = {
     )
 }
 
+
 ROWS = 3
 COLUMNS = 3
+
 PIECE_SIZE = 4
 ROUNDS = 2
 PIECES = ('I', 'O', 'J', 'L', 'S', 'Z', 'T')
@@ -68,7 +70,7 @@ class TetrisPiece:
         self.time = time
 
     def __repr__(self):
-        return f'{self.piece}_{self.rotation} {self.x, self.y} R{self.time}'
+        return f'''\nTetrisPiece {self.piece}_{self.rotation} {self.x, self.y} Round#{self.time}'''
 
 # Create proposition for a single cell
 # If true the cell is occupied/blocked by a piece
@@ -82,7 +84,7 @@ class Cell:
         self.time = time
 
     def __repr__(self):
-        return f'{self.x, self.y} R{self.time}'
+        return f'\nCell{self.x, self.y} R{self.time}'
 
 
 # Each key is defaulted to an empty list
@@ -120,6 +122,7 @@ for x in range(ROWS):
 for piece_props in pieces_by_time.values():
     constraint.add_exactly_one(E, *piece_props)
 
+
 # For all piece propositions, when they are placed ina  location they will then occupy those cells.
 for piece_prop in all_piece_props:
     rotation = TETRIMINOS[piece_prop.piece][piece_prop.rotation]
@@ -129,6 +132,7 @@ for piece_prop in all_piece_props:
         if piece_prop.time:  # If this is not round 1
             below = (cells_by_cell[(x + 1, y)][time - 1] for x, y in cells)
             constraint.add_at_least_one(E, *below)  # There must be a piece for the current to fall onto
+
         else:
             E.add_constraint(~piece_prop)
 

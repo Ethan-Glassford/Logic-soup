@@ -129,3 +129,14 @@ dmypy.json
 .pyre/
 
 poetry.lock
+myenv/pyvenv.cfg
+myenv/Scripts/activate
+myenv/Scripts/activate.bat
+myenv/Scripts/Activate.ps1
+myenv/Scripts/deactivate.bat
+myenv/Scripts/pip.exe
+myenv/Scripts/pip3.10.exe
+myenv/Scripts/pip3.exe
+myenv/Scripts/pynnf.exe
+myenv/Scripts/python.exe
+myenv/Scripts/pythonw.exe
