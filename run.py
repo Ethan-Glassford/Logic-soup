@@ -94,7 +94,6 @@ for x in range(ROWS + PIECE_SIZE - 1): #loop through every cell
             cells_by_time[time].append(cell_prop)
             all_cell_props.append(cell_prop)
 
-
 pieces_by_time = collections.defaultdict(list)
 pieces_by_cell = collections.defaultdict(list)
 all_piece_props = []
@@ -137,6 +136,7 @@ for piece_prop in all_piece_props:
         #For this and future rounds, this cell will be occupied
         for time in range(piece_prop.time, ROUNDS):
             E.add_constraint(piece_prop >> cells_by_cell[(x, y)][time])
+            
 #Ensure out of bound cells can not pieces placed in them
 for (x, y), cell_props in cells_by_cell.items():
     if x < 0 or x >= ROWS or y < 0 or y >= COLUMNS:
