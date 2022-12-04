@@ -1,0 +1,231 @@
+﻿CONJECTUREPANEL Quiz
+PROOF "((C111∧C211)∧¬(C121∧C221))∨¬(C111∧C211)∧(C121∧C221) ⊢ ¬(C111∧C211)∨¬(C121∧C221)"
+INFER ((C111∧C211)∧¬(C121∧C221))∨¬(C111∧C211)∧(C121∧C221)
+     ⊢ ¬(C111∧C211)∨¬(C121∧C221)
+FORMULAE
+0 ¬(C111∧C211),
+1 ¬(C121∧C221),
+2 ¬(C111∧C211)∨¬(C121∧C221),
+3 ¬(C111∧C211)∧(C121∧C221),
+4 C121∧C221,
+5 C111∧C211∧¬(C121∧C221),
+6 C111∧C211,
+7 (C111∧C211)∧¬(C121∧C221)∨¬(C111∧C211)∧(C121∧C221),
+8 (C111∧C211)∧¬(C121∧C221),
+9 ((C111∧C211)∧¬(C121∧C221))∨¬(C111∧C211)∧(C121∧C221)
+IS
+SEQ ("∨ elim"[A,B,C\8,3,2]) (hyp[A\7]) (cut[B,C\1,2]) (LAYOUT "∧ elim" (0) ("∧ elim(R)"[A,B\6,1]) (hyp[A\5])) (cut[B,C\1,2]) (hyp[A\1]) (LAYOUT "∨ intro" (0) ("∨ intro(R)"[B,A\0,1]) (hyp[A\1])) (cut[B,C\0,2]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\0,4]) (hyp[A\3])) (cut[B,C\0,2]) (hyp[A\0]) (LAYOUT "∨ intro" (0) ("∨ intro(L)"[B,A\1,0]) (hyp[A\0]))
+END
+CONJECTUREPANEL Theorems
+PROOF "¬¬P ⊢ P"
+INFER ¬¬P 
+     ⊢ P 
+FORMULAE
+0 ⊥,
+1 ¬¬P,
+2 ¬P,
+3 P 
+IS
+SEQ ("contra (classical)"[A\3]) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Theorems
+PROOF "P→Q ⊢ ¬Q→¬P"
+INFER P→Q 
+     ⊢ ¬Q→¬P 
+FORMULAE
+0 ⊥,
+1 ¬Q,
+2 Q,
+3 P,
+4 P→Q,
+5 ¬P 
+IS
+SEQ ("→ intro"[A,B\1,5]) ("¬ intro"[A\3]) (cut[B,C\2,0]) ("→ elim"[A,B\3,2]) (hyp[A\4]) (hyp[A\3]) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Quiz
+PROOF "A11→(C111∧C211), A12→(C121∧C221), B11→(C112∧C122), B12→(C212∧C222), ¬(C111∧C112), ¬(C121∧C122), ¬(C211∧C212), ¬(C221∧C222), A11∨A12, ¬(A11∧A12), B11∨B12, ¬(B11∧B12), A11 ⊢ ⊥"
+INFER A11→(C111∧C211),
+     A12→(C121∧C221),
+     B11→(C112∧C122),
+     B12→(C212∧C222),
+     ¬(C111∧C112),
+     ¬(C121∧C122),
+     ¬(C211∧C212),
+     ¬(C221∧C222),
+     A11∨A12,
+     ¬(A11∧A12),
+     B11∨B12,
+     ¬(B11∧B12),
+     A11 
+     ⊢ ⊥ 
+FORMULAE
+0 ⊥,
+1 ¬(C211∧C212),
+2 C211∧C212,
+3 C212,
+4 C211,
+5 C212∧C222,
+6 C222,
+7 B12,
+8 B12→C212∧C222,
+9 ¬(C111∧C112),
+10 C111∧C112,
+11 C112,
+12 C111,
+13 C112∧C122,
+14 C122,
+15 B11,
+16 B11→C112∧C122,
+17 B11∨B12,
+18 C111∧C211,
+19 A11,
+20 A11→C111∧C211,
+21 A11∨A12,
+22 B12→(C212∧C222),
+23 ¬(B11∧B12),
+24 A12→(C121∧C221),
+25 ¬(A11∧A12),
+26 B11→(C112∧C122),
+27 ¬(C121∧C122),
+28 A11→(C111∧C211),
+29 ¬(C221∧C222)
+IS
+SEQ (cut[B,C\18,0]) ("→ elim"[A,B\19,18]) (hyp[A\20]) (hyp[A\19]) (cut[B,C\4,0]) (LAYOUT "∧ elim" (0) ("∧ elim(R)"[A,B\12,4]) (hyp[A\18])) (cut[B,C\12,0]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\12,4]) (hyp[A\18])) ("∨ elim"[A,B,C\15,7,0]) (hyp[A\17]) (cut[B,C\13,0]) ("→ elim"[A,B\15,13]) (hyp[A\16]) (hyp[A\15]) (cut[B,C\11,0]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\11,14]) (hyp[A\13])) (cut[B,C\10,0]) ("∧ intro"[A,B\12,11]) (hyp[A\12]) (hyp[A\11]) (cut[B,C\0,0]) ("¬ elim"[B\10]) (hyp[A\10]) (hyp[A\9]) (hyp[A\0]) (cut[B,C\5,0]) ("→ elim"[A,B\7,5]) (hyp[A\8]) (hyp[A\7]) (cut[B,C\3,0]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\3,6]) (hyp[A\5])) (cut[B,C\2,0]) ("∧ intro"[A,B\4,3]) (hyp[A\4]) (hyp[A\3]) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Theorems
+PROOF "P→Q, ¬Q ⊢ ¬P"
+INFER P→Q,
+     ¬Q 
+     ⊢ ¬P 
+FORMULAE
+0 ⊥,
+1 ¬Q,
+2 Q,
+3 P,
+4 P→Q 
+IS
+SEQ ("¬ intro"[A\3]) (cut[B,C\2,0]) ("→ elim"[A,B\3,2]) (hyp[A\4]) (hyp[A\3]) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Quiz
+PROOF "A11→(C111∧C211), A12→(C121∧C221), B11→(C112∧C212), B12→(C122∧C222), ¬(C111∧C112), ¬(C121∧C122), ¬(C211∧C212), ¬(C221∧C222), A11∨A12, ¬(A11∧A12), B11∨B12, ¬(B11∧B12) ⊢ A12∨B12"
+INFER A11→(C111∧C211),
+     A12→(C121∧C221),
+     B11→(C112∧C212),
+     B12→(C122∧C222),
+     ¬(C111∧C112),
+     ¬(C121∧C122),
+     ¬(C211∧C212),
+     ¬(C221∧C222),
+     A11∨A12,
+     ¬(A11∧A12),
+     B11∨B12,
+     ¬(B11∧B12)
+     ⊢ A12∨B12 
+FORMULAE
+0 A12,
+1 B12,
+2 ⊥,
+3 A12∨B12,
+4 ¬(C111∧C112),
+5 C111∧C112,
+6 C112,
+7 C111,
+8 C112∧C212,
+9 C212,
+10 B11,
+11 B11→C112∧C212,
+12 B11∨B12,
+13 C111∧C211,
+14 C211,
+15 A11,
+16 A11→C111∧C211,
+17 A11∨A12,
+18 B12→(C122∧C222),
+19 ¬(B11∧B12),
+20 B11→(C112∧C212),
+21 ¬(C111∧C112),
+22 A12→(C121∧C221),
+23 ¬(A11∧A12),
+24 ¬(C121∧C122),
+25 A11→(C111∧C211),
+26 ¬(C221∧C222),
+27 ¬(C211∧C212)
+IS
+SEQ ("∨ elim"[A,B,C\15,0,3]) (hyp[A\17]) (cut[B,C\13,3]) ("→ elim"[A,B\15,13]) (hyp[A\16]) (hyp[A\15]) (cut[B,C\7,3]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\7,14]) (hyp[A\13])) ("∨ elim"[A,B,C\10,1,3]) (hyp[A\12]) (cut[B,C\8,3]) ("→ elim"[A,B\10,8]) (hyp[A\11]) (hyp[A\10]) (cut[B,C\6,3]) (LAYOUT "∧ elim" (0) ("∧ elim(L)"[A,B\6,9]) (hyp[A\8])) (cut[B,C\5,3]) ("∧ intro"[A,B\7,6]) (hyp[A\7]) (hyp[A\6]) (cut[B,C\2,3]) ("¬ elim"[B\5]) (hyp[A\5]) (hyp[A\4]) ("contra (constructive)"[B\3]) (hyp[A\2]) (LAYOUT "∨ intro" (0) ("∨ intro(R)"[B,A\0,1]) (hyp[A\1])) (LAYOUT "∨ intro" (0) ("∨ intro(L)"[B,A\1,0]) (hyp[A\0]))
+END
+CONJECTUREPANEL Theorems
+PROOF "P∨¬P"
+INFER P∨¬P 
+FORMULAE
+0 ⊥,
+1 ¬(P∨¬P),
+2 P∨¬P,
+3 P,
+4 ¬P,
+5 ¬(P∨¬P)
+IS
+SEQ ("contra (classical)"[A\2]) (cut[B,C\3,0]) ("contra (classical)"[A\3]) (cut[B,C\2,0]) (LAYOUT "∨ intro" (0) ("∨ intro(R)"[B,A\3,4]) (hyp[A\4])) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0]) (cut[B,C\2,0]) (LAYOUT "∨ intro" (0) ("∨ intro(L)"[B,A\4,3]) (hyp[A\3])) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Theorems
+PROOF "P ⊢ ¬¬P"
+INFER P 
+     ⊢ ¬¬P 
+FORMULAE
+0 ⊥,
+1 ¬P,
+2 P 
+IS
+SEQ ("¬ intro"[A\1]) (cut[B,C\0,0]) ("¬ elim"[B\2]) (hyp[A\2]) (hyp[A\1]) (hyp[A\0])
+END
+CONJECTUREPANEL Quiz
+PROOF "A11→(C111∧C211), A12→(C121∧C221), B11→(C112∧C212), B12→(C122∧C222), ¬(C111∧C112), ¬(C121∧C122), ¬(C211∧C212), ¬(C221∧C222), A11∨A12, ¬(A11∧A12), B11∨B12, ¬(B11∧B12), ¬(C121∧C221)∨¬(C122∧C222) ⊢ (C111∧C211)∨(C112∧C212)"
+INFER A11→(C111∧C211),
+     A12→(C121∧C221),
+     B11→(C112∧C212),
+     B12→(C122∧C222),
+     ¬(C111∧C112),
+     ¬(C121∧C122),
+     ¬(C211∧C212),
+     ¬(C221∧C222),
+     A11∨A12,
+     ¬(A11∧A12),
+     B11∨B12,
+     ¬(B11∧B12),
+     ¬(C121∧C221)∨¬(C122∧C222)
+     ⊢ (C111∧C211)∨(C112∧C212)
+FORMULAE
+0 ⊥,
+1 (C111∧C211)∨(C112∧C212),
+2 ¬(C221∧C222),
+3 C221∧C222,
+4 C222,
+5 C221,
+6 C122∧C222,
+7 C122,
+8 B12,
+9 B12→C122∧C222,
+10 C112∧C212,
+11 C111∧C211,
+12 B11,
+13 B11→C112∧C212,
+14 B11∨B12,
+15 C121∧C221,
+16 C121,
+17 A12,
+18 A12→C121∧C221,
+19 A11,
+20 A11→C111∧C211,
+21 A11∨A12,
+22 B12→(C122∧C222),
+23 ¬(B11∧B12),
+24 B11→(C112∧C212),
+25 ¬(C111∧C112),
+26 A12→(C121∧C221),
+27 ¬(A11∧A12),
+28 ¬(C121∧C122),
+29 A11→(C111∧C211),
+30 ¬(C211∧C212),
+31 ¬(C121∧C221)∨¬(C122∧C222)
+IS
+SEQ ("∨ elim"[A,B,C\19,17,1]) (hyp[A\21]) (cut[B,C\11,1]) ("→ elim"[A,B\19,11]) (hyp[A\20]) (hyp[A\19]) (LAYOUT "∨ intro" (0) ("∨ intro(L)"[B,A\10,11]) (hyp[A\11])) (cut[B,C\15,1]) ("→ elim"[A,B\17,15]) (hyp[A\18]) (hyp[A\17]) (cut[B,C\5,1]) (LAYOUT "∧ elim" (0) ("∧ elim(R)"[A,B\16,5]) (hyp[A\15])) ("∨ elim"[A,B,C\12,8,1]) (hyp[A\14]) (cut[B,C\10,1]) ("→ elim"[A,B\12,10]) (hyp[A\13]) (hyp[A\12]) (LAYOUT "∨ intro" (0) ("∨ intro(R)"[B,A\11,10]) (hyp[A\10])) (cut[B,C\6,1]) ("→ elim"[A,B\8,6]) (hyp[A\9]) (hyp[A\8]) (cut[B,C\4,1]) (LAYOUT "∧ elim" (0) ("∧ elim(R)"[A,B\7,4]) (hyp[A\6])) (cut[B,C\3,1]) ("∧ intro"[A,B\5,4]) (hyp[A\5]) (hyp[A\4]) (cut[B,C\0,1]) ("¬ elim"[B\3]) (hyp[A\3]) (hyp[A\2]) ("contra (constructive)"[B\1]) (hyp[A\0])
+END
