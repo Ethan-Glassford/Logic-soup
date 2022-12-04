@@ -6,8 +6,8 @@ import random
 # Encoding that will store all of your constraints
 E = Encoding()
 
-#CONSTANTS
-#With (0,0) in the top-left corner blocks a piece takes up are based on where it is from the 0,0 corner
+# CONSTANTS
+# With (0,0) in the top-left corner blocks a piece takes up are based on where it is from the 0,0 corner
 TETRIMINOS = {
     'I': (
         ((0, 0), (0, 1), (0, 2), (0, 3)),
@@ -45,18 +45,21 @@ TETRIMINOS = {
 }
 
 
+ROWS = 3
 COLUMNS = 3
-ROWS = 2
-PIECE_SIZE = 4
-ROUNDS = 1
 
+PIECE_SIZE = 4
+ROUNDS = 2
 PIECES = ('I', 'O', 'J', 'L', 'S', 'Z', 'T')
-#PIECES = ('O')
-PIECES_BY_ROUND = [random.choice(PIECES) for _ in range(ROUNDS)] #Randomize order of incoming pieces
+
+# Randomize order of incoming pieces
+PIECES_BY_ROUND = [random.choice(PIECES) for _ in range(ROUNDS)]
 print(f'Piece Order: {PIECES_BY_ROUND}')
 
-#Represent a general tetriino piece
-#Type of piece, orientation, location and what round piece is in play in.
+# Represent a general tetriino piece
+# Type of piece, orientation, location and what round piece is in play in.
+
+
 @proposition(E)
 class TetrisPiece:
     def __init__(self, piece, rotation, x, y, time):
@@ -69,8 +72,10 @@ class TetrisPiece:
     def __repr__(self):
         return f'''\nTetrisPiece {self.piece}_{self.rotation} {self.x, self.y} Round#{self.time}'''
 
-#Create proposition for a single cell
-#If true the cell is occupied/blocked by a piece
+# Create proposition for a single cell
+# If true the cell is occupied/blocked by a piece
+
+
 @proposition(E)
 class Cell:
     def __init__(self, x, y, time):
@@ -82,15 +87,17 @@ class Cell:
         return f'\nCell{self.x, self.y} R{self.time}'
 
 
-cells_by_cell = collections.defaultdict(list) #Each key is defaulted to an empty list
+# Each key is defaulted to an empty list
+cells_by_cell = collections.defaultdict(list)
 cells_by_time = collections.defaultdict(list)
 
 all_cell_props = []
-for x in range(ROWS + PIECE_SIZE - 1): #loop through every cell
-    for y in range(COLUMNS + PIECE_SIZE - 1): #loop through every cell
-        for time in range(ROUNDS): #Loop through every round
-            cell_prop = Cell(x, y, time) #Creating a proposition for each cell,
-            cells_by_cell[(x, y)].append(cell_prop) 
+for x in range(ROWS + PIECE_SIZE - 1):  # loop through every cell
+    for y in range(COLUMNS + PIECE_SIZE - 1):  # loop through every cell
+        for time in range(ROUNDS):  # Loop through every round
+            # Creating a proposition for each cell,
+            cell_prop = Cell(x, y, time)
+            cells_by_cell[(x, y)].append(cell_prop)
             cells_by_time[time].append(cell_prop)
             all_cell_props.append(cell_prop)
 
@@ -99,55 +106,59 @@ pieces_by_cell = collections.defaultdict(list)
 all_piece_props = []
 for x in range(ROWS):
     for y in range(COLUMNS):
-        for time, piece in enumerate(PIECES_BY_ROUND): #Loop through round specific piece
-            for i in range(len(TETRIMINOS[piece])): #Loop through orientation 
-                piece_prop = TetrisPiece(piece, i, x, y, time) #Create proposition for each cell
-                pieces_by_time[time].append(piece_prop) 
+        # Loop through round specific piece
+        for time, piece in enumerate(PIECES_BY_ROUND):
+            for i in range(len(TETRIMINOS[piece])):  # Loop through orientation
+                # Create proposition for each cell
+                piece_prop = TetrisPiece(piece, i, x, y, time)
+                pieces_by_time[time].append(piece_prop)
                 pieces_by_cell[(x, y)].append(piece_prop)
                 all_piece_props.append(piece_prop)
 
 
+# CONSTRAINTS
 
-#CONSTRAINTS
-
-#There must be exactly one piece placed in a round.
+# There must be exactly one piece placed in a round.
 for piece_props in pieces_by_time.values():
     constraint.add_exactly_one(E, *piece_props)
 
-#For all piece propositions, when they are placed in a location they will then occupy those cells.
+
+# For all piece propositions, when they are placed ina  location they will then occupy those cells.
 for piece_prop in all_piece_props:
     rotation = TETRIMINOS[piece_prop.piece][piece_prop.rotation]
     cells = [(piece_prop.x + dx, piece_prop.y + dy) for dx, dy in rotation]
-    #If there is no cell touching the bottom, it must be checked
-    if all(x != ROWS - 1 for x, _ in cells):
-        if piece_prop.time: #If this is not round 1
-            constraint.add_at_least_one(
-                E, *(cells_by_cell[(x + 1, y)][time - 1] for x, y in cells)) #There must be a piece for the current to fall onto
+    # If there is no cell touching the bottom, it must be checked
+    if all(x < ROWS - 1 for x, _ in cells):
+        if piece_prop.time:  # If this is not round 1
+            below = (cells_by_cell[(x + 1, y)][time - 1] for x, y in cells)
+            constraint.add_at_least_one(E, *below)  # There must be a piece for the current to fall onto
+
         else:
             E.add_constraint(~piece_prop)
 
-    #Check every cell
-    for x, y in cells: 
-        #For all previous rounds
+    # Check every cell
+    for x, y in cells:
+        # For all previous rounds
         for time in range(piece_prop.time):
             for r in range(x + 1):
-                #If there are occupied cells above or in the same cell, the atempted placement is invalid.
+                # If there are occupied cells above or in the same cell, the atempted placement is invalid.
                 E.add_constraint(piece_prop >> (~cells_by_cell[(r, y)][time]))
-        #For this and future rounds, this cell will be occupied
+        # For this and future rounds, this cell will be occupied
         for time in range(piece_prop.time, ROUNDS):
             E.add_constraint(piece_prop >> cells_by_cell[(x, y)][time])
-            
-#Ensure out of bound cells can not pieces placed in them
+
+# Ensure out of bound cells can not pieces placed in them
 for (x, y), cell_props in cells_by_cell.items():
     if x < 0 or x >= ROWS or y < 0 or y >= COLUMNS:
         constraint.add_none_of(E, *cell_props)
 
-#For a cell to be occupied, there must be a actual piece placed in the location
+# For a cell to be occupied, there must be a actual piece placed in the location
 for time, cell_props in cells_by_time.items():
 
-    #Each piece must take up PIECE_SIZE cells
+    # Each piece must take up PIECE_SIZE cells
     if (time + 1) * PIECE_SIZE < ROWS * COLUMNS:
-        constraint.add_at_most_k(E, (time + 1) * PIECE_SIZE, *cell_props)#Check each round for correct number of cells occupied.
+        # Check each round for correct number of cells occupied.
+        constraint.add_at_most_k(E, (time + 1) * PIECE_SIZE, *cell_props)
     else:
         break
 
@@ -158,4 +169,3 @@ E = E.compile()
 print(f'\nSatisfiable: {E.satisfiable()}')
 print(f'# Solutions: {count_solutions(E)}')
 print(f'Solution: {E.solve()}')
-print("Variable likelihoods:")
