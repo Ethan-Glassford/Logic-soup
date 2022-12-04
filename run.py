@@ -45,12 +45,13 @@ TETRIMINOS = {
 }
 
 
-COLUMNS = 2
-ROWS = 3
+COLUMNS = 3
+ROWS = 2
 PIECE_SIZE = 4
 ROUNDS = 1
 
 PIECES = ('I', 'O', 'J', 'L', 'S', 'Z', 'T')
+#PIECES = ('O')
 PIECES_BY_ROUND = [random.choice(PIECES) for _ in range(ROUNDS)] #Randomize order of incoming pieces
 print(f'Piece Order: {PIECES_BY_ROUND}')
 
@@ -66,7 +67,7 @@ class TetrisPiece:
         self.time = time
 
     def __repr__(self):
-        return f'{self.piece}_{self.rotation} {self.x, self.y} R{self.time}'
+        return f'''\nTetrisPiece {self.piece}_{self.rotation} {self.x, self.y} Round#{self.time}'''
 
 #Create proposition for a single cell
 #If true the cell is occupied/blocked by a piece
@@ -78,7 +79,7 @@ class Cell:
         self.time = time
 
     def __repr__(self):
-        return f'{self.x, self.y} R{self.time}'
+        return f'\nCell{self.x, self.y} R{self.time}'
 
 
 cells_by_cell = collections.defaultdict(list) #Each key is defaulted to an empty list
@@ -114,10 +115,10 @@ for x in range(ROWS):
 for piece_props in pieces_by_time.values():
     constraint.add_exactly_one(E, *piece_props)
 
-#For all piece propositions, when they are placed ina  location they will then occupy those cells.
+#For all piece propositions, when they are placed in a location they will then occupy those cells.
 for piece_prop in all_piece_props:
     rotation = TETRIMINOS[piece_prop.piece][piece_prop.rotation]
-    cells = ((piece_prop.x + dx, piece_prop.y + dy) for dx, dy in rotation)
+    cells = [(piece_prop.x + dx, piece_prop.y + dy) for dx, dy in rotation]
     #If there is no cell touching the bottom, it must be checked
     if all(x != ROWS - 1 for x, _ in cells):
         if piece_prop.time: #If this is not round 1
@@ -155,6 +156,6 @@ E = E.compile()
 # After compilation (and only after), you can check some of the properties
 # of your model:
 print(f'\nSatisfiable: {E.satisfiable()}')
-# print(f'# Solutions: {count_solutions(T)}')
+print(f'# Solutions: {count_solutions(E)}')
 print(f'Solution: {E.solve()}')
 print("Variable likelihoods:")
