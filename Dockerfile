@@ -15,10 +15,14 @@ WORKDIR /PROJECT
 RUN pip3 install --upgrade pip
 RUN pip3 install nnf
 RUN pip3 install bauhaus
+RUN pip3 install pygame
+
+
+
 
 # install dsharp to run in the container
 RUN curl https://mulab.ai/cisc-204/dsharp -o /usr/local/bin/dsharp
 RUN chmod u+x /usr/local/bin/dsharp
 
 # default command to execute when container starts
-CMD /bin/bash
+CMD ["/bin/bash"]
