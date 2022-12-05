@@ -5,7 +5,7 @@ import collections
 
 
 class Visualizer:
-    WIDTH, HEIGHT = 800, 400
+    WIDTH, HEIGHT = 1100, 800
     PAD = 0.25
     ADJ = (-1, 0), (1, 0), (0, -1), (0, 1)
     PIECE_COLOURS = (
