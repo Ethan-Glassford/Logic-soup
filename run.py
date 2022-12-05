@@ -159,7 +159,6 @@ if __name__ == '__main__':
 
     # For a cell to be occupied, there must be a actual piece placed in the location
     for time, cell_props in cells_by_time.items():
-
         # Each piece must take up PIECE_SIZE cells
         if (time + 1) * PIECE_SIZE < ROWS * COLUMNS:
             # Check each round for correct number of cells occupied.
