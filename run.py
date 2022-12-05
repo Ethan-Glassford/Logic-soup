@@ -78,14 +78,13 @@ if __name__ == '__main__':
     }
 
     ROWS = 2
-    COLUMNS = 4
+    COLUMNS = 3
     PIECE_SIZE = 4
-    ROUNDS = 2
+    ROUNDS = 1
     PIECES = ('I', 'O', 'J', 'L', 'S', 'Z', 'T')
 
     # Randomize order of incoming pieces
     PIECES_BY_ROUND = [random.choice(PIECES) for _ in range(ROUNDS)]
-    PIECES_BY_ROUND = ['O', 'O']
     print(f'Piece Order: {PIECES_BY_ROUND}')
 
     # Represent a general tetriino piece
