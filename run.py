@@ -170,7 +170,7 @@ if __name__ == '__main__':
     # After compilation (and only after), you can check some of the properties
     # of your model:
     print(f'\nSatisfiable: {E.satisfiable()}')
-    # print(f'# Solutions: {count_solutions(E)}')
+    print(f'# Solutions: {count_solutions(E)}')
     solution = E.solve()
     print(f'Solution: {solution}')
     # visualize.visualize(solution, ROWS, COLUMNS, TETRIMINOS)
