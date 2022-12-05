@@ -2,7 +2,9 @@ from bauhaus import Encoding, proposition, constraint
 from bauhaus.utils import count_solutions, likelihood
 import collections
 import random
-import visualize
+# import visualize
+import itertools
+import operator
 
 E = Encoding()
 
@@ -132,19 +134,20 @@ if __name__ == '__main__':
         if all(x < ROWS - 1 for x, _ in cells):
             if piece_prop.time:  # If this is not round 1
                 below = (cells_by_cell[(x + 1, y)][time - 1] for x, y in cells)
+                at_least_one = itertools.accumulate(below, operator.or_)
                 # There must be a piece for the current to fall onto
-                constraint.add_at_least_one(E, *below)
+                E.add_constraint(piece_prop >> at_least_one)
             else:
                 E.add_constraint(~piece_prop)
 
         # Check every cell
         for x, y in cells:
             # For all previous rounds
-            for time in range(piece_prop.time):
+            if piece_prop.time:
                 for r in range(x + 1):
                     # If there are occupied cells above or in the same cell, the atempted placement is invalid.
                     E.add_constraint(piece_prop >> (
-                        ~cells_by_cell[(r, y)][time]))
+                        ~cells_by_cell[(r, y)][piece_prop.time - 1]))
             # For this and future rounds, this cell will be occupied
             for time in range(piece_prop.time, ROUNDS):
                 E.add_constraint(piece_prop >> cells_by_cell[(x, y)][time])
@@ -172,4 +175,4 @@ if __name__ == '__main__':
     # print(f'# Solutions: {count_solutions(E)}')
     solution = E.solve()
     print(f'Solution: {solution}')
-    visualize.visualize(solution, ROWS, COLUMNS, TETRIMINOS)
+    # visualize.visualize(solution, ROWS, COLUMNS, TETRIMINOS)
