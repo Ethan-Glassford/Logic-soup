@@ -1,6 +1,4 @@
 import pygame
-import os
-os.environ["SDL_VIDEODRIVER"] = "dummy"
 import collections
 
 
@@ -34,6 +32,11 @@ class Visualizer:
         self.tetriminos = tetriminos
 
     def draw_grid(self, cell_colours):
+        """Draw all the cells in the grid
+
+        Args:
+            cell_colours: maps each cell to a colour
+        """
         for i in range(self.rows):
             for j in range(self.columns):
                 left = self.left_margin + j*self.cell_size
@@ -76,6 +79,14 @@ class Visualizer:
         pygame.display.update()
 
     def get_cell_colours(self, piece_colours=None):
+        """Gets the colours of each cell
+
+        Args:
+            piece_colours: (optional) maps pieces to a colour
+
+        Returns:
+            map each cell to a colour
+        """
         if piece_colours is None:
             piece_colours = self.get_piece_colours()
         cell_colours = collections.defaultdict(lambda: Visualizer.BG_COLOUR)
@@ -85,6 +96,13 @@ class Visualizer:
         return cell_colours
 
     def get_piece_colours(self):
+        """Get the colours of each piece,
+        ensuring that no adjacent pieces have the same colouring,
+        by applying greedy graph colouring
+
+        Returns:
+            map each piece to a colour
+        """
         cells_by_piece = collections.defaultdict(set)
         for prop, isTrue in self.solution.items():
             if not isTrue:
